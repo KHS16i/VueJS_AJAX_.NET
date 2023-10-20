@@ -1,0 +1,498 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="EntidadesBD.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ComponenteSistema">
+          <Key>
+            <PropertyRef Name="IdComponenteSistema" />
+          </Key>
+          <Property Name="IdComponenteSistema" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSistema" Type="int" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="Version" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="FechaLiberacion" Type="datetime" />
+          <Property Name="IdDesarrollador" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Desarrolladores">
+          <Key>
+            <PropertyRef Name="IdDesarrollador" />
+          </Key>
+          <Property Name="IdDesarrollador" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Apellidos" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="50" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="FechaIngreso" Type="datetime" />
+          <Property Name="FechaSalida" Type="datetime" />
+        </EntityType>
+        <EntityType Name="EmpresaCliente">
+          <Key>
+            <PropertyRef Name="IdEmpresa" />
+          </Key>
+          <Property Name="IdEmpresa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Telefono" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="50" />
+          <Property Name="Direccion" Type="varchar" MaxLength="500" />
+          <Property Name="Cuidad" Type="varchar" MaxLength="50" />
+          <Property Name="Pais" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Respaldo">
+          <Key>
+            <PropertyRef Name="IdRespaldo" />
+          </Key>
+          <Property Name="IdRespaldo" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdSistema" Type="int" Nullable="false" />
+          <Property Name="IdComponenteSistema" Type="int" Nullable="false" />
+          <Property Name="IdDesarrollador" Type="int" Nullable="false" />
+          <Property Name="FechaLiberacion" Type="datetime" />
+          <Property Name="FechaUltimaModificacion" Type="datetime" />
+          <Property Name="FechaUltimoRespaldo" Type="datetime" Nullable="false" />
+          <Property Name="FechaPruebaRespaldo" Type="datetime" Nullable="false" />
+          <Property Name="RespaldoGIT" Type="bit" Nullable="false" />
+          <Property Name="RespaldoNube" Type="bit" Nullable="false" />
+          <Property Name="RespaldoFisico" Type="bit" Nullable="false" />
+          <Property Name="Comentarios" Type="varchar" MaxLength="1000" />
+          <Property Name="Version" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IdDesarrolladorCertifica" Type="int" />
+          <Property Name="RespaldoDB" Type="bit" />
+        </EntityType>
+        <EntityType Name="Sistema">
+          <Key>
+            <PropertyRef Name="IdSistema" />
+          </Key>
+          <Property Name="IdSistema" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Descripcion" Type="varchar" MaxLength="100" />
+          <Property Name="Version" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="FechaLiberacion" Type="datetime" />
+          <Property Name="IdEmpresa" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <Association Name="FK_ComponenteSistema_PK_Desarrolladores">
+          <End Role="Desarrolladores" Type="Self.Desarrolladores" Multiplicity="1" />
+          <End Role="ComponenteSistema" Type="Self.ComponenteSistema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Desarrolladores">
+              <PropertyRef Name="IdDesarrollador" />
+            </Principal>
+            <Dependent Role="ComponenteSistema">
+              <PropertyRef Name="IdDesarrollador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ComponenteSistema_PK_Sistema">
+          <End Role="Sistema" Type="Self.Sistema" Multiplicity="1" />
+          <End Role="ComponenteSistema" Type="Self.ComponenteSistema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sistema">
+              <PropertyRef Name="IdSistema" />
+            </Principal>
+            <Dependent Role="ComponenteSistema">
+              <PropertyRef Name="IdSistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respaldo_PK_ComponenteSistema">
+          <End Role="ComponenteSistema" Type="Self.ComponenteSistema" Multiplicity="1" />
+          <End Role="Respaldo" Type="Self.Respaldo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ComponenteSistema">
+              <PropertyRef Name="IdComponenteSistema" />
+            </Principal>
+            <Dependent Role="Respaldo">
+              <PropertyRef Name="IdComponenteSistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respaldo_PK_Desarrolladores">
+          <End Role="Desarrolladores" Type="Self.Desarrolladores" Multiplicity="1" />
+          <End Role="Respaldo" Type="Self.Respaldo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Desarrolladores">
+              <PropertyRef Name="IdDesarrollador" />
+            </Principal>
+            <Dependent Role="Respaldo">
+              <PropertyRef Name="IdDesarrollador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respaldo_PK_Sistema">
+          <End Role="Sistema" Type="Self.Sistema" Multiplicity="1" />
+          <End Role="Respaldo" Type="Self.Respaldo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sistema">
+              <PropertyRef Name="IdSistema" />
+            </Principal>
+            <Dependent Role="Respaldo">
+              <PropertyRef Name="IdSistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sistema_PK_EmpresaCliente">
+          <End Role="EmpresaCliente" Type="Self.EmpresaCliente" Multiplicity="1" />
+          <End Role="Sistema" Type="Self.Sistema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpresaCliente">
+              <PropertyRef Name="IdEmpresa" />
+            </Principal>
+            <Dependent Role="Sistema">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EntidadesBDStoreContainer">
+          <EntitySet Name="ComponenteSistema" EntityType="Self.ComponenteSistema" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Desarrolladores" EntityType="Self.Desarrolladores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EmpresaCliente" EntityType="Self.EmpresaCliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Respaldo" EntityType="Self.Respaldo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sistema" EntityType="Self.Sistema" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_ComponenteSistema_PK_Desarrolladores" Association="Self.FK_ComponenteSistema_PK_Desarrolladores">
+            <End Role="Desarrolladores" EntitySet="Desarrolladores" />
+            <End Role="ComponenteSistema" EntitySet="ComponenteSistema" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ComponenteSistema_PK_Sistema" Association="Self.FK_ComponenteSistema_PK_Sistema">
+            <End Role="Sistema" EntitySet="Sistema" />
+            <End Role="ComponenteSistema" EntitySet="ComponenteSistema" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respaldo_PK_ComponenteSistema" Association="Self.FK_Respaldo_PK_ComponenteSistema">
+            <End Role="ComponenteSistema" EntitySet="ComponenteSistema" />
+            <End Role="Respaldo" EntitySet="Respaldo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respaldo_PK_Desarrolladores" Association="Self.FK_Respaldo_PK_Desarrolladores">
+            <End Role="Desarrolladores" EntitySet="Desarrolladores" />
+            <End Role="Respaldo" EntitySet="Respaldo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respaldo_PK_Sistema" Association="Self.FK_Respaldo_PK_Sistema">
+            <End Role="Sistema" EntitySet="Sistema" />
+            <End Role="Respaldo" EntitySet="Respaldo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sistema_PK_EmpresaCliente" Association="Self.FK_Sistema_PK_EmpresaCliente">
+            <End Role="EmpresaCliente" EntitySet="EmpresaCliente" />
+            <End Role="Sistema" EntitySet="Sistema" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="EntidadesBD" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ComponenteSistema">
+          <Key>
+            <PropertyRef Name="IdComponenteSistema" />
+          </Key>
+          <Property Name="IdComponenteSistema" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSistema" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Version" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaLiberacion" Type="DateTime" Precision="3" />
+          <Property Name="IdDesarrollador" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Desarrolladores" Relationship="Self.FK_ComponenteSistema_PK_Desarrolladores" FromRole="ComponenteSistema" ToRole="Desarrolladores" />
+          <NavigationProperty Name="Sistema" Relationship="Self.FK_ComponenteSistema_PK_Sistema" FromRole="ComponenteSistema" ToRole="Sistema" />
+          <NavigationProperty Name="Respaldo" Relationship="EntidadesBD.FK_Respaldo_PK_ComponenteSistema" FromRole="ComponenteSistema" ToRole="Respaldo" />
+        </EntityType>
+        <EntityType Name="Desarrolladores">
+          <Key>
+            <PropertyRef Name="IdDesarrollador" />
+          </Key>
+          <Property Name="IdDesarrollador" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Apellidos" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="FechaIngreso" Type="DateTime" Precision="3" />
+          <Property Name="FechaSalida" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="ComponenteSistema" Relationship="Self.FK_ComponenteSistema_PK_Desarrolladores" FromRole="Desarrolladores" ToRole="ComponenteSistema" />
+          <NavigationProperty Name="Respaldo" Relationship="EntidadesBD.FK_Respaldo_PK_Desarrolladores" FromRole="Desarrolladores" ToRole="Respaldo" />
+        </EntityType>
+        <EntityType Name="EmpresaCliente">
+          <Key>
+            <PropertyRef Name="IdEmpresa" />
+          </Key>
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Telefono" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Direccion" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Cuidad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Pais" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Sistema" Relationship="Self.FK_Sistema_PK_EmpresaCliente" FromRole="EmpresaCliente" ToRole="Sistema" />
+        </EntityType>
+        <EntityType Name="Sistema">
+          <Key>
+            <PropertyRef Name="IdSistema" />
+          </Key>
+          <Property Name="IdSistema" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Descripcion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Version" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="FechaLiberacion" Type="DateTime" Precision="3" />
+          <Property Name="IdEmpresa" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ComponenteSistema" Relationship="Self.FK_ComponenteSistema_PK_Sistema" FromRole="Sistema" ToRole="ComponenteSistema" />
+          <NavigationProperty Name="EmpresaCliente" Relationship="Self.FK_Sistema_PK_EmpresaCliente" FromRole="Sistema" ToRole="EmpresaCliente" />
+          <NavigationProperty Name="Respaldo" Relationship="EntidadesBD.FK_Respaldo_PK_Sistema" FromRole="Sistema" ToRole="Respaldo" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <Association Name="FK_ComponenteSistema_PK_Desarrolladores">
+          <End Role="Desarrolladores" Type="Self.Desarrolladores" Multiplicity="1" />
+          <End Role="ComponenteSistema" Type="Self.ComponenteSistema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Desarrolladores">
+              <PropertyRef Name="IdDesarrollador" />
+            </Principal>
+            <Dependent Role="ComponenteSistema">
+              <PropertyRef Name="IdDesarrollador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ComponenteSistema_PK_Sistema">
+          <End Role="Sistema" Type="Self.Sistema" Multiplicity="1" />
+          <End Role="ComponenteSistema" Type="Self.ComponenteSistema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sistema">
+              <PropertyRef Name="IdSistema" />
+            </Principal>
+            <Dependent Role="ComponenteSistema">
+              <PropertyRef Name="IdSistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Sistema_PK_EmpresaCliente">
+          <End Role="EmpresaCliente" Type="Self.EmpresaCliente" Multiplicity="1" />
+          <End Role="Sistema" Type="Self.Sistema" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EmpresaCliente">
+              <PropertyRef Name="IdEmpresa" />
+            </Principal>
+            <Dependent Role="Sistema">
+              <PropertyRef Name="IdEmpresa" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Diverscan" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ComponenteSistema" EntityType="Self.ComponenteSistema" />
+          <EntitySet Name="Desarrolladores" EntityType="Self.Desarrolladores" />
+          <EntitySet Name="EmpresaCliente" EntityType="Self.EmpresaCliente" />
+          <EntitySet Name="Sistema" EntityType="Self.Sistema" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <AssociationSet Name="FK_ComponenteSistema_PK_Desarrolladores" Association="Self.FK_ComponenteSistema_PK_Desarrolladores">
+            <End Role="Desarrolladores" EntitySet="Desarrolladores" />
+            <End Role="ComponenteSistema" EntitySet="ComponenteSistema" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ComponenteSistema_PK_Sistema" Association="Self.FK_ComponenteSistema_PK_Sistema">
+            <End Role="Sistema" EntitySet="Sistema" />
+            <End Role="ComponenteSistema" EntitySet="ComponenteSistema" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Sistema_PK_EmpresaCliente" Association="Self.FK_Sistema_PK_EmpresaCliente">
+            <End Role="EmpresaCliente" EntitySet="EmpresaCliente" />
+            <End Role="Sistema" EntitySet="Sistema" />
+          </AssociationSet>
+          <EntitySet Name="Respaldo" EntityType="EntidadesBD.Respaldo" />
+          <AssociationSet Name="FK_Respaldo_PK_ComponenteSistema" Association="EntidadesBD.FK_Respaldo_PK_ComponenteSistema">
+            <End Role="ComponenteSistema" EntitySet="ComponenteSistema" />
+            <End Role="Respaldo" EntitySet="Respaldo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respaldo_PK_Desarrolladores" Association="EntidadesBD.FK_Respaldo_PK_Desarrolladores">
+            <End Role="Desarrolladores" EntitySet="Desarrolladores" />
+            <End Role="Respaldo" EntitySet="Respaldo" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Respaldo_PK_Sistema" Association="EntidadesBD.FK_Respaldo_PK_Sistema">
+            <End Role="Sistema" EntitySet="Sistema" />
+            <End Role="Respaldo" EntitySet="Respaldo" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="Respaldo">
+          <Key>
+            <PropertyRef Name="IdRespaldo" />
+          </Key>
+          <Property Name="IdRespaldo" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdSistema" Type="Int32" Nullable="false" />
+          <Property Name="IdComponenteSistema" Type="Int32" Nullable="false" />
+          <Property Name="IdDesarrollador" Type="Int32" Nullable="false" />
+          <Property Name="FechaLiberacion" Type="DateTime" Precision="3" />
+          <Property Name="FechaUltimaModificacion" Type="DateTime" Precision="3" />
+          <Property Name="FechaUltimoRespaldo" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaPruebaRespaldo" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RespaldoGIT" Type="Boolean" Nullable="false" />
+          <Property Name="RespaldoNube" Type="Boolean" Nullable="false" />
+          <Property Name="RespaldoFisico" Type="Boolean" Nullable="false" />
+          <Property Name="Comentarios" Type="String" MaxLength="1000" FixedLength="false" Unicode="false" />
+          <Property Name="Version" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="IdDesarrolladorCertifica" Type="Int32" />
+          <Property Name="RespaldoDB" Type="Boolean" />
+          <NavigationProperty Name="ComponenteSistema" Relationship="EntidadesBD.FK_Respaldo_PK_ComponenteSistema" FromRole="Respaldo" ToRole="ComponenteSistema" />
+          <NavigationProperty Name="Desarrolladores" Relationship="EntidadesBD.FK_Respaldo_PK_Desarrolladores" FromRole="Respaldo" ToRole="Desarrolladores" />
+          <NavigationProperty Name="Sistema" Relationship="EntidadesBD.FK_Respaldo_PK_Sistema" FromRole="Respaldo" ToRole="Sistema" />
+        </EntityType>
+        <Association Name="FK_Respaldo_PK_ComponenteSistema">
+          <End Type="EntidadesBD.ComponenteSistema" Role="ComponenteSistema" Multiplicity="1" />
+          <End Type="EntidadesBD.Respaldo" Role="Respaldo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ComponenteSistema">
+              <PropertyRef Name="IdComponenteSistema" />
+            </Principal>
+            <Dependent Role="Respaldo">
+              <PropertyRef Name="IdComponenteSistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respaldo_PK_Desarrolladores">
+          <End Type="EntidadesBD.Desarrolladores" Role="Desarrolladores" Multiplicity="1" />
+          <End Type="EntidadesBD.Respaldo" Role="Respaldo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Desarrolladores">
+              <PropertyRef Name="IdDesarrollador" />
+            </Principal>
+            <Dependent Role="Respaldo">
+              <PropertyRef Name="IdDesarrollador" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Respaldo_PK_Sistema">
+          <End Type="EntidadesBD.Sistema" Role="Sistema" Multiplicity="1" />
+          <End Type="EntidadesBD.Respaldo" Role="Respaldo" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sistema">
+              <PropertyRef Name="IdSistema" />
+            </Principal>
+            <Dependent Role="Respaldo">
+              <PropertyRef Name="IdSistema" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="EntidadesBDStoreContainer" CdmEntityContainer="Diverscan">
+          <EntitySetMapping Name="ComponenteSistema">
+            <EntityTypeMapping TypeName="EntidadesBD.ComponenteSistema">
+              <MappingFragment StoreEntitySet="ComponenteSistema">
+                <ScalarProperty Name="IdComponenteSistema" ColumnName="IdComponenteSistema" />
+                <ScalarProperty Name="IdSistema" ColumnName="IdSistema" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="FechaLiberacion" ColumnName="FechaLiberacion" />
+                <ScalarProperty Name="IdDesarrollador" ColumnName="IdDesarrollador" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Desarrolladores">
+            <EntityTypeMapping TypeName="EntidadesBD.Desarrolladores">
+              <MappingFragment StoreEntitySet="Desarrolladores">
+                <ScalarProperty Name="IdDesarrollador" ColumnName="IdDesarrollador" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Apellidos" ColumnName="Apellidos" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="FechaSalida" ColumnName="FechaSalida" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmpresaCliente">
+            <EntityTypeMapping TypeName="EntidadesBD.EmpresaCliente">
+              <MappingFragment StoreEntitySet="EmpresaCliente">
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="Cuidad" ColumnName="Cuidad" />
+                <ScalarProperty Name="Pais" ColumnName="Pais" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sistema">
+            <EntityTypeMapping TypeName="EntidadesBD.Sistema">
+              <MappingFragment StoreEntitySet="Sistema">
+                <ScalarProperty Name="IdSistema" ColumnName="IdSistema" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="FechaLiberacion" ColumnName="FechaLiberacion" />
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="EntidadesBD.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Respaldo">
+            <EntityTypeMapping TypeName="EntidadesBD.Respaldo">
+              <MappingFragment StoreEntitySet="Respaldo">
+                <ScalarProperty Name="RespaldoDB" ColumnName="RespaldoDB" />
+                <ScalarProperty Name="IdDesarrolladorCertifica" ColumnName="IdDesarrolladorCertifica" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="Comentarios" ColumnName="Comentarios" />
+                <ScalarProperty Name="RespaldoFisico" ColumnName="RespaldoFisico" />
+                <ScalarProperty Name="RespaldoNube" ColumnName="RespaldoNube" />
+                <ScalarProperty Name="RespaldoGIT" ColumnName="RespaldoGIT" />
+                <ScalarProperty Name="FechaPruebaRespaldo" ColumnName="FechaPruebaRespaldo" />
+                <ScalarProperty Name="FechaUltimoRespaldo" ColumnName="FechaUltimoRespaldo" />
+                <ScalarProperty Name="FechaUltimaModificacion" ColumnName="FechaUltimaModificacion" />
+                <ScalarProperty Name="FechaLiberacion" ColumnName="FechaLiberacion" />
+                <ScalarProperty Name="IdDesarrollador" ColumnName="IdDesarrollador" />
+                <ScalarProperty Name="IdComponenteSistema" ColumnName="IdComponenteSistema" />
+                <ScalarProperty Name="IdSistema" ColumnName="IdSistema" />
+                <ScalarProperty Name="IdRespaldo" ColumnName="IdRespaldo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400&display=swap" rel="stylesheet">
+
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/Style.css" type="text/css">
+
+    <title>Trazabilidad Proyectos</title>
+
+</head>
+
+<body>
+
+    <div id="Respaldo">
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal_Agregar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+             aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content modal-Boot">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="staticBackdropLabel">Agregar Respaldo</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <form id="miFormulario" @submit.prevent="registrarRespaldo" ref="miFormulario" class="needs-validation" novalidate>
+
+                        <div class="modal-body">
+
+                            <div class="container">
+                                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4">
+                                    <div class="col my-4">
+
+                                        <label for="validationCustom01" class="form-label">Sistema</label>
+
+                                        <select id="validationCustom01" v-model="ddlSist" @change="handleSelectChange" class="form-select" aria-label="Default select example">
+                                            <option value="0" selected>Seleccione..</option>
+                                            <option v-for="Sist in listaSist" :key="Sist.IdSistema" :value="Sist.IdSistema">
+                                                {{Sist.Nombre}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col my-4">
+
+                                        <label for="validationCustom02" class="form-label">Comp. Sistema</label>
+
+                                        <select id="validationCustom02" v-model="ddlCompSist" class="form-select" aria-label="Default select example">
+                                            <option value="0" selected disabled="disabled">Seleccione..</option>
+                                            <option v-for="CompSist in listaCompSist" :key="CompSist.IdComponenteSistema" :value="CompSist.IdComponenteSistema">
+                                                {{CompSist.Nombre}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col my-4">
+
+                                        <label for="validationCustom03" class="form-label">Respaldo por</label>
+
+                                        <select id="validationCustom03" v-model="ddlDev" class="form-select" aria-label="Default select example">
+                                            <option value="0" selected="selected" disabled="disabled">Seleccione..</option>
+                                            <option v-for="Dev in listaDevs" :key="Dev.IdDesarrollador" :value="Dev.IdDesarrollador">
+                                                {{Dev.Nombre}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col my-4">
+
+                                        <label for="validationCustom04" class="form-label">Cert. por</label>
+
+                                        <select id="validationCustom04" v-model="ddlDevCert" class="form-select" aria-label="Default select example">
+                                            <option value="0" selected="selected" disabled="disabled">Seleccione..</option>
+                                            <option v-for="Dev in listaDevs" :key="Dev.IdDesarrollador" :value="Dev.IdDesarrollador">
+                                                {{Dev.Nombre}}
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                    <div class="col">
+
+                                        <div class="mt-3">
+                                            <label for="validationCustom05" class="form-label">Fecha última modificación: </label>
+                                            <input id="validationCustom05" v-model="fechaMod" type="date" class="form-control" id="validationCustom06" required>
+                                            <div class="invalid-feedback">
+                                                Escoja la fecha de la última modificación.
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="col col mt-3">
+
+                                        <div class="m-2 form-check">
+                                            <input id="invalidCheck01" v-model="git" class="form-check-input" type="checkbox">
+                                            <label class="form-check-label" for="invalidCheck01">
+                                                Respaldado en GIT.
+                                            </label>
+                                        </div>
+                                        <div class="m-2 form-check">
+                                            <input id="invalidCheck02" v-model="nube" class="form-check-input" type="checkbox" value="">
+                                            <label class="form-check-label" for="invalidCheck02">
+                                                Respaldado en la Nube.
+                                            </label>
+                                        </div>
+                                        <div class="m-2 form-check">
+                                            <input id="invalidCheck03" v-model="fisico" class="form-check-input" type="checkbox" value="">
+                                            <label class="form-check-label" for="invalidCheck03">
+                                                Respaldado Físico.
+                                            </label>
+                                        </div>
+                                        <div class="m-2 form-check">
+                                            <input id="invalidCheck04" v-model="db" class="form-check-input" type="checkbox">
+                                            <label class="form-check-label" for="invalidCheck04">
+                                                Respaldado BD.
+                                            </label>
+                                        </div>
+
+                                    </div>
+                                    <div class="col">
+
+                                        <div class="mt-3">
+                                            <label for="validationCustom06" class="form-label">Versión </label>
+                                            <input id="validationCustom06" v-model="version" type="text" class="form-control" id="validationCustom07" required>
+                                            <div class="invalid-feedback">
+                                                Ingrese la versión del Componente de Sistema.
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col mt-3">
+                                        <div class="mb-3">
+                                            <label for="validationTextarea" class="form-label">Comentarios</label>
+
+                                            <textarea v-model="comentario" class="form-control" id="validationTextarea" style="resize:none;" required></textarea>
+                                            <div class="invalid-feedback">
+                                                Por favor agregue un comentario.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <hr class="separador">
+
+                                <div style="display:flex; justify-content:right;">
+                                    <div class="m-2">
+                                        <button type="submit" class="btn btn-danger">Agregar</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <header>
+            <div>
+                <h4>
+                    Trazabilidad de Proyectos<br>
+                </h4>
+                <p>Desarrollado por Kevin Hernández Sandi.</p>
+            </div>
+            <div>
+                <img src="Recursos/KHS16 logo.png" alt="Logo Diverscan" draggable="false" class="img_header" />
+            </div>
+        </header>
+
+        <!-- Section -->
+        <section class="main">
+            <div class="Main-section">
+                <div v-if="cargandoComponente" class="text-center m-5">
+                    <div class="spinner-grow text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <table v-if="!cargandoComponente" id="tbl_Componente" class="table table-dark table-striped" style="width: 100% !important">
+                    <thead>
+                        <tr>
+                            <th scope="col">Empresa</th>
+                            <th scope="col">Sistema</th>
+                            <th scope="col">Componente</th>
+                            <th scope="col">Descripción</th>
+                            <th scope="col">Desarrollador</th>
+                            <th scope="col">Liberacón</th>
+                            <th scope="col">Versión</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(componente, index) in listaComponente" :key="index">
+
+                            <td>{{componente.Empresa}}</td>
+                            <td>{{componente.Sistema}}</td>
+                            <td>{{componente.Componente}}</td>
+                            <td>{{componente.Descripcion}}</td>
+                            <td>{{componente.Desarrollador}}</td>
+                            <td>{{componente.FechaLiberacion}}</td>
+                            <td>{{componente.Version}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <hr class="separador">
+
+                <div v-if="!cargandoRespaldos" class="btns">
+                    <button class="btn m-3 btn-danger" data-bs-toggle="modal" data-bs-target="#modal_Agregar">
+                        Agregar
+                    </button>
+                </div>
+
+                <div v-if="cargandoRespaldos" class="text-center m-5">
+                    <div class="spinner-grow text-light" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+
+                <table v-if="!cargandoRespaldos" id="tbl_reporte" class="table table-dark table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Sistema</th>
+                            <th scope="col">Componente Sistema</th>
+                            <th scope="col">Desarrollador a cargo</th>
+                            <th scope="col">Última Modificación</th>
+                            <th scope="col">Fecha Respaldo</th>
+                            <th scope="col">Fecha Certificación</th>
+                            <th scope="col">GIT</th>
+                            <th scope="col">Nube</th>
+                            <th scope="col">Físico</th>
+                            <th scope="col">BD</th>
+                            <th scope="col">Respaldado por</th>
+                            <th scope="col">Certificado por</th>
+                            <th scope="col">Comentarios</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr v-for="(respaldo, index) in listaRespaldo" :key="index">
+
+                            <td>{{respaldo.Sistema}}</td>
+                            <td>{{respaldo.Componente}}</td>
+                            <td>{{respaldo.Desarrollador}}</td>
+                            <td>{{respaldo.FechaUltimaModificacion}}</td>
+                            <td>{{respaldo.FechaUltimoRespaldo}}</td>
+                            <td>{{respaldo.FechaPruebaRespaldo}}</td>
+                            <td>{{respaldo.RespaldoGIT}}</td>
+                            <td>{{respaldo.RespaldoNube}}</td>
+                            <td>{{respaldo.RespaldoFisico}}</td>
+                            <td>{{respaldo.RespaldoDB}}</td>
+                            <td>{{respaldo.RespaldoPor}}</td>
+                            <td>{{respaldo.Certificador}}</td>
+                            <td>{{respaldo.Comentarios}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; Kevin Hernández Sandi - <span id="fecha-actual"></span></p>
+        </footer>
+    </div>
+    <script src="https://d3e54v103j8qbb.cloudfront.net/js/jquery-3.5.1.min.dc5e7f18c8.js?site=606dfb37871f33efa37244d4"
+            type="text/javascript" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"></script>
+
+    <script src="js/vue.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="js/Scripts.js"></script>
+
+
+</body>
+
+</html>
